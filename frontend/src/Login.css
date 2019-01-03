@@ -42,7 +42,6 @@ form {
 
 .submitButton {
   width: 35%;
-  padding-left: 4em;
   margin-top: 1.2em;
   margin-bottom: 0.6em;
   text-align: center;
@@ -55,8 +54,6 @@ form {
   }
   .submitButton {
     width: 35%;
-    padding-left: 4em;
-    margin-right: 5px;
   }
 
   #submitRow {
