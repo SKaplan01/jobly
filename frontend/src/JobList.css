@@ -1,5 +1,6 @@
 .list {
   background-color: rgba(20, 20, 65, 0.87);
+  min-height: 100vh;
 }
 
 .searchForm {
