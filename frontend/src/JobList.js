@@ -12,7 +12,8 @@ class JobList extends Component {
       search: '',
       isLoading: true
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = _.debounce(this.handleSubmit.bind(this), 500);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -31,6 +32,7 @@ class JobList extends Component {
   //{search: searchtermFromForm} --> defaults to {} if no search term
   async handleSubmit(evt) {
     try {
+      console.log('running, ', evt);
       let jobs = await JoblyApi.getJobs({ search: this.state.search });
       this.setState({ jobs, isLoading: false });
     } catch (err) {
@@ -39,10 +41,19 @@ class JobList extends Component {
     }
   }
 
+  // working version (but calls the debounced fn multiple times)
+  // async handleChange(evt) {
+  //   console.log('handleChangeRan');
+  //   this.setState({ search: evt.target.value }, () =>
+  //     _.debounce(this.handleSubmit, 2000)()
+  //   );
+  // }
+
+  // version that runs for every key press (filters by "e" then "ed" then "edi")
+  //putting debounce in the constructor solves the problem!
   async handleChange(evt) {
-    this.setState({ search: evt.target.value }, () =>
-      _.debounce(this.handleSubmit, 500)()
-    );
+    console.log('handleChange ran');
+    this.setState({ search: evt.target.value }, () => this.handleSubmit());
   }
 
   render() {
