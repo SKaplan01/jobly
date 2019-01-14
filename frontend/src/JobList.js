@@ -12,8 +12,9 @@ class JobList extends Component {
       search: '',
       isLoading: true
     };
+    // Non-debounced version to demo in lightning talk
     // this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSubmit = _.debounce(this.handleSubmit.bind(this), 500);
+    this.handleSubmit = _.debounce(this.handleSubmit.bind(this), 800);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -30,9 +31,9 @@ class JobList extends Component {
 
   //when search form is submitted, makes request to backend with searchterm
   //{search: searchtermFromForm} --> defaults to {} if no search term
-  async handleSubmit(evt) {
+  async handleSubmit() {
     try {
-      console.log('running, ', evt);
+      console.log('handleSubmit ran');
       let jobs = await JoblyApi.getJobs({ search: this.state.search });
       this.setState({ jobs, isLoading: false });
     } catch (err) {
@@ -41,20 +42,19 @@ class JobList extends Component {
     }
   }
 
-  // working version (but calls the debounced fn multiple times)
-  // async handleChange(evt) {
-  //   console.log('handleChangeRan');
-  //   this.setState({ search: evt.target.value }, () =>
-  //     _.debounce(this.handleSubmit, 2000)()
-  //   );
-  // }
-
-  // version that runs for every key press (filters by "e" then "ed" then "edi")
-  //putting debounce in the constructor solves the problem!
   async handleChange(evt) {
     console.log('handleChange ran');
-    this.setState({ search: evt.target.value }, () => this.handleSubmit());
+    this.setState({ search: evt.target.value }, () => this.handleSubmit(evt));
   }
+
+  // buggy version for lightning talk (2 bugs -->
+  // 1. not invoked, 2. should debounce in constructor)
+  // async handleChange(evt) {
+  //   console.log('handleChange ran');
+  //   this.setState({ search: evt.target.value }, () =>
+  //     _.debounce(this.handleSubmit, 800)
+  //   );
+  // }
 
   render() {
     //map through jobs that user has applied to and create a new set with the id of those jobs
